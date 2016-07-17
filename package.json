@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/AmaanC/node-strings-webtask/issues"
   },
-  "homepage": "https://github.com/AmaanC/node-strings-webtask#readme"
+  "homepage": "https://github.com/AmaanC/node-strings-webtask#readme",
+  "devDependencies": {
+    "chai": "^3.5.0"
+  },
+  "dependencies": {
+    "bluebird": "^3.4.1"
+  }
 }
