@@ -5,11 +5,20 @@ const stringsUtil = require('../');
 
 describe('stringsUtil', function() {
     describe('.printFromBuffer', function() {
-	it('should print all printable strings in a buffer', function() {
+	it('should find the string \'hurray\'', function() {
 	    const stringBuffer = Buffer.from('hurray!', 'ascii');
-	    const allStrings =  stringsUtil.printFromBuffer(stringBuffer);
-	    assert.isAbove(allStrings.length, 0);
-	    assert.equal('hurray!', allStrings[0]);
+	    const stringsArray =  stringsUtil.printFromBuffer(stringBuffer);
+	    // There should be only one string: 'hurray!'
+	    assert.equal(stringsArray.length, 1);
+	    assert.equal('hurray!', stringsArray[0]);
+	});
+    });
+    
+    describe('.printFromBuffer: minChars=10', function() {
+	it('should find no strings in buffer', function() {
+	    const stringBuffer = Buffer.from('hurray!', 'ascii');
+	    const stringsArray =  stringsUtil.printFromBuffer(stringBuffer, minChars = 10);
+	    assert.equal(stringsArray.length, 0);
 	});
     });
     
