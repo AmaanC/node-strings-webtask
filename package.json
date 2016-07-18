@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "bluebird": "^3.4.1",
-    "request": "^2.73.0",
-    "request-promise": "^4.0.1"
+    "follow-redirects": "^0.2.0"
   }
 }
