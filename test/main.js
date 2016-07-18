@@ -38,23 +38,51 @@ describe('stringsUtil', function() {
     });
     
     describe('.printFromFile', function() {
-	it('should print all strings in a file', function() {
+	
+	// A helper that converts our arrays into strings of the format
+	// that strings outputs
+	// The output file ends with a newline, whereas
+	// our arr.join'd string won't.
+	// Apart from that, they should be identical
+	const arrToString = (stringsArray) =>
+		  (stringsArray.join('\n') + '\n');
+	const filesPath = './test/example-files/';
+	const binaryFilePath = filesPath + 'helloWorld';
 
-	    const getTextFileContents = fs.readFileAsync('./example-files/stringsOutput.txt', 'ascii');
-	    const getStringsFromFile = stringsUtil.printFromFile('./example-files/helloWorld').then(function(stringsArray) {
-		return stringsArray.join('\n');
+	describe('defaultOpt', function() {
+	    it('should print all strings in a file', function() {
+		const getTextFileContents = fs.readFileAsync(filesPath + 'defaultOutput.txt', 'ascii');
+		
+		const getDefaultStrings = stringsUtil.printFromFile(binaryFilePath).then(arrToString);
+		
+		Promise.all([getTextFileContents, getDefaultStrings]).then(
+		    function([fileText, stringsFromFile]) {
+			assert.equal(fileText, stringsFromFile);
+		    }
+		);
 	    });
-	    
-	    Promise.all([
-		getTextFileContents,
-		getStringsFromFile
-	    ])
-	    .then(function([fileText, stringsFromFile]) {
-		// The output file ends with a newline, whereas
-		// our arr.join won't.
-		// Apart from that, they should be identical
-		assert.equal(fileText, stringsFromFile + '\n');
+	});
+
+	describe('tenChar', function() {
+	    it('should print strings > 10 chars', function() {
+		const getTextFileContents = fs.readFileAsync(filesPath + 'tenChars.txt', 'ascii');
+		
+		const getTenCharStrings = stringsUtil.printFromFile(binaryFilePath, 10).then(arrToString);
+		
+		Promise.all([getTextFileContents, getTenCharStrings]).then(
+		    function([fileText, stringsFromFile]) {
+			assert.equal(fileText, stringsFromFile);
+		    }
+		);
 	    });
+	});
+
+    });
+
+    describe('.printFromUrl', function() {
+	it('should print all strings from a URL', function() {
+	    const zipUrl = 'https://github.com/AmaanC/node-strings-webtask/blob/master/test/example-files/test.zip?raw=true';
+
 	});
     });
 
