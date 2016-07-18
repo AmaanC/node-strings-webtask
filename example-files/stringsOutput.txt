@@ -48,7 +48,7 @@ completed.6973
 __do_global_dtors_aux_fini_array_entry
 frame_dummy
 __frame_dummy_init_array_entry
-test.c
+helloWorld.c
 __FRAME_END__
 __JCR_END__
 __init_array_end
