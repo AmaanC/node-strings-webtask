@@ -26,7 +26,10 @@ describe('stringsUtil', function() {
     describe('.printFromBuffer: minChars=10', function() {
 	it('should find no strings in buffer', function() {
 	    const stringBuffer = Buffer.from('hurray!', 'ascii');
-	    const stringsArray = stringsUtil.printFromBuffer(stringBuffer, minChars = 10);
+	    const stringsArray = stringsUtil.printFromBuffer(
+		stringBuffer,
+		{ minChars: 10 }
+	    );
 	    assert.equal(stringsArray.length, 0);
 	});
     });
@@ -36,8 +39,11 @@ describe('stringsUtil', function() {
 	    const stringBuffer = Buffer.from('laaaaaaame', 'ascii');
 	    const stringsArray = stringsUtil.printFromBuffer(
 		stringBuffer,
-		4,
-		(charCode) => (String.fromCharCode(charCode) === 'a')
+		{
+		    minChars: 4,
+		    isPrintableFn: (charCode) =>
+			(String.fromCharCode(charCode) === 'a')
+		}
 	    );
 	    
 	    // 
@@ -68,7 +74,7 @@ describe('stringsUtil', function() {
 	    it('should print strings > 10 chars', function() {
 		const getTextFileContents = fs.readFileAsync(filesPath + 'tenChars.txt', 'ascii');
 		
-		const getTenCharStrings = stringsUtil.printFromFile(binaryFilePath, 10).then(arrToString);
+		const getTenCharStrings = stringsUtil.printFromFile(binaryFilePath, { minChars: 10 }).then(arrToString);
 		
 		return Promise.all([getTextFileContents, getTenCharStrings]).then(
 		    function([fileText, stringsFromFile]) {
@@ -82,16 +88,20 @@ describe('stringsUtil', function() {
 
     describe('.printFromUrl', function() {
 	it('should print all strings from a URL', function() {
+	    // Downloading the zip may take some time,
+	    // so we'll allow up to 30s before we fail the test
+	    this.timeout(30000);
+	    
 	    // We're printing all the strings in a zip file, which is
 	    // actually very interesting to see after compression!
-	    const zipUrl = 'https://github.com/AmaanC/node-strings-webtask/blob/master/test/example-files/test.zip?raw=true';
+	    const zipUrl = 'http://raw.githubusercontent.com/AmaanC/node-strings-webtask/master/test/example-files/test.zip';
 
 	    const getTextFileContents = fs.readFileAsync(filesPath + 'zipOutput.txt', 'ascii');
 
 	    const getStringsFromUrl = stringsUtil.printFromUrl(zipUrl).then(arrToString);
 	    return Promise.all([getTextFileContents, getStringsFromUrl]).then(
 		function([fileText, stringsFromUrl]) {
-		    console.log(stringsFromUrl);
+		    // console.log(stringsFromUrl);
 		    assert.equal(fileText, stringsFromUrl);
 		}
 	    );
