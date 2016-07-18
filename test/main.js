@@ -7,7 +7,7 @@ describe('stringsUtil', function() {
     describe('.printFromBuffer', function() {
 	it('should find the string \'hurray\'', function() {
 	    const stringBuffer = Buffer.from('hurray!', 'ascii');
-	    const stringsArray =  stringsUtil.printFromBuffer(stringBuffer);
+	    const stringsArray = stringsUtil.printFromBuffer(stringBuffer);
 	    // There should be only one string: 'hurray!'
 	    assert.equal(stringsArray.length, 1);
 	    assert.equal('hurray!', stringsArray[0]);
@@ -17,8 +17,23 @@ describe('stringsUtil', function() {
     describe('.printFromBuffer: minChars=10', function() {
 	it('should find no strings in buffer', function() {
 	    const stringBuffer = Buffer.from('hurray!', 'ascii');
-	    const stringsArray =  stringsUtil.printFromBuffer(stringBuffer, minChars = 10);
+	    const stringsArray = stringsUtil.printFromBuffer(stringBuffer, minChars = 10);
 	    assert.equal(stringsArray.length, 0);
+	});
+    });
+    
+    describe('.printFromBuffer: isPrintableFn', function() {
+	it('should print only a\'s', function() {
+	    const stringBuffer = Buffer.from('laaaaaaame', 'ascii');
+	    const stringsArray = stringsUtil.printFromBuffer(
+		stringBuffer,
+		4,
+		(charCode) => (String.fromCharCode(charCode) === 'a')
+	    );
+	    
+	    // 
+	    assert.equal(stringsArray.length, 1);
+	    assert.equal('aaaaaaa', stringsArray[0]);
 	});
     });
     
