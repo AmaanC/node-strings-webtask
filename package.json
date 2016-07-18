@@ -20,6 +20,8 @@
     "chai": "^3.5.0"
   },
   "dependencies": {
-    "bluebird": "^3.4.1"
+    "bluebird": "^3.4.1",
+    "request": "^2.73.0",
+    "request-promise": "^4.0.1"
   }
 }
