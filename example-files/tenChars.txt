@@ -1,0 +1,44 @@
+/lib64/ld-linux-x86-64.so.2
+__libc_start_main
+__gmon_start__
+GLIBC_2.2.5
+[]A\A]A^A_
+Some other string
+Hello world!
+GCC: (Ubuntu 4.8.4-2ubuntu1~14.04.3) 4.8.4
+.note.ABI-tag
+.note.gnu.build-id
+.gnu.version
+.gnu.version_r
+.eh_frame_hdr
+.init_array
+.fini_array
+crtstuff.c
+__JCR_LIST__
+deregister_tm_clones
+register_tm_clones
+__do_global_dtors_aux
+completed.6973
+__do_global_dtors_aux_fini_array_entry
+frame_dummy
+__frame_dummy_init_array_entry
+helloWorld.c
+__FRAME_END__
+__JCR_END__
+__init_array_end
+__init_array_start
+_GLOBAL_OFFSET_TABLE_
+__libc_csu_fini
+_ITM_deregisterTMCloneTable
+data_start
+puts@@GLIBC_2.2.5
+__libc_start_main@@GLIBC_2.2.5
+__data_start
+__gmon_start__
+__dso_handle
+_IO_stdin_used
+__libc_csu_init
+__bss_start
+_Jv_RegisterClasses
+__TMC_END__
+_ITM_registerTMCloneTable

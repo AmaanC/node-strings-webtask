@@ -1,7 +1,12 @@
 generate: helloWorld
-	strings helloWorld > stringsOutput.txt
+	strings helloWorld > defaultOutput.txt
+	strings helloWorld -n 10 > tenChars.txt
+	strings test.zip > zipOutput.txt
 
 helloWorld: helloWorld.c
 	gcc -o helloWorld helloWorld.c
 
-.phony: generate
+clean:
+	rm helloWorld *.txt
+
+.phony: generate clean
