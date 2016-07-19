@@ -14,42 +14,44 @@ const filesPath = './test/example-files/';
 
 describe('stringsUtil', function() {
     describe('.printFromBuffer', function() {
-	it('should find the string \'hurray\'', function() {
-	    const stringBuffer = Buffer.from('hurray!', 'ascii');
-	    const stringsArray = stringsUtil.printFromBuffer(stringBuffer);
-	    // There should be only one string: 'hurray!'
-	    assert.equal(stringsArray.length, 1);
-	    assert.equal('hurray!', stringsArray[0]);
+	describe('defaultOpts', function() {
+	    it('should find the string \'hurray\'', function() {
+		const stringBuffer = Buffer.from('hurray!', 'ascii');
+		const stringsArray = stringsUtil.printFromBuffer(stringBuffer);
+		// There should be only one string: 'hurray!'
+		assert.equal(stringsArray.length, 1);
+		assert.equal('hurray!', stringsArray[0]);
+	    });
 	});
-    });
-    
-    describe('.printFromBuffer: minChars=10', function() {
-	it('should find no strings in buffer', function() {
-	    const stringBuffer = Buffer.from('hurray!', 'ascii');
-	    const stringsArray = stringsUtil.printFromBuffer(
-		stringBuffer,
-		{ minChars: 10 }
-	    );
-	    assert.equal(stringsArray.length, 0);
+
+	describe('minChars=10', function() {
+	    it('should find no strings in buffer', function() {
+		const stringBuffer = Buffer.from('hurray!', 'ascii');
+		const stringsArray = stringsUtil.printFromBuffer(
+		    stringBuffer,
+		    { minChars: 10 }
+		);
+		assert.equal(stringsArray.length, 0);
+	    });
 	});
-    });
-    
-    describe('.printFromBuffer: isPrintableFn', function() {
-	it('should print only a\'s', function() {
-	    const stringBuffer = Buffer.from('laaaaaaame', 'ascii');
-	    const stringsArray = stringsUtil.printFromBuffer(
-		stringBuffer,
-		{
-		    minChars: 4,
-		    isPrintableFn: (charCode) =>
-			(String.fromCharCode(charCode) === 'a')
-		}
-	    );
-	    
-	    // 
-	    assert.equal(stringsArray.length, 1);
-	    assert.equal('aaaaaaa', stringsArray[0]);
+
+	describe('isPrintableFn', function() {
+	    it('should print only a\'s', function() {
+		const stringBuffer = Buffer.from('laaaaaaame', 'ascii');
+		const stringsArray = stringsUtil.printFromBuffer(
+		    stringBuffer,
+		    {
+			minChars: 4,
+			isPrintableFn: (charCode) =>
+			    (String.fromCharCode(charCode) === 'a')
+		    }
+		);
+		
+		assert.equal(stringsArray.length, 1);
+		assert.equal('aaaaaaa', stringsArray[0]);
+	    });
 	});
+	
     });
     
     describe('.printFromFile', function() {
@@ -90,6 +92,9 @@ describe('stringsUtil', function() {
 	it('should print all strings from a URL', function() {
 	    // Downloading the zip may take some time,
 	    // so we'll allow up to 30s before we fail the test
+
+	    // NOTE: This may fail sometimes because Github is rate-limiting
+	    // Trying again in a few seconds usually works.
 	    this.timeout(30000);
 	    
 	    // We're printing all the strings in a zip file, which is
