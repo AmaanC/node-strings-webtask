@@ -5,10 +5,9 @@ A recreation of GNU Binutils' [`strings`](https://en.wikipedia.org/wiki/Strings_
 
 After cloning (`git clone`) and installing dependencies (`npm install`), it can be used like this:
 
-      const Promise = require('bluebird');
       const stringsUtil = require('./pathToLib/app.js');
-
-      stringsUtil.loadFromUrl('http://raw.githubusercontent.com/AmaanC/node-strings-webtask/master/test/example-files/test.zip').then(function(arr) {
+      const zipUrl = 'http://raw.githubusercontent.com/AmaanC/node-strings-webtask/master/test/example-files/test.zip';
+      stringsUtil.loadFromUrl(zipUrl).then(function(arr) {
             console.log(arr.join('\n'));
       });
 
