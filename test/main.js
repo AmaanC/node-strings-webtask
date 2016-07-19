@@ -14,11 +14,11 @@ const arrToString = (stringsArray) =>
 const filesPath = './test/example-files/';
 
 describe('stringsUtil', function() {
-    describe('.printFromBuffer', function() {
+    describe('.getArrFromBuffer', function() {
 	describe('defaultOpts', function() {
 	    it('should find the string \'hurray\'', function() {
 		const stringBuffer = Buffer.from('hurray!', 'ascii');
-		const stringsArray = stringsUtil.printFromBuffer(stringBuffer);
+		const stringsArray = stringsUtil.getArrFromBuffer(stringBuffer);
 		// There should be only one string: 'hurray!'
 		assert.equal(stringsArray.length, 1);
 		assert.equal('hurray!', stringsArray[0]);
@@ -28,7 +28,7 @@ describe('stringsUtil', function() {
 	describe('minChars=10', function() {
 	    it('should find no strings in buffer', function() {
 		const stringBuffer = Buffer.from('hurray!', 'ascii');
-		const stringsArray = stringsUtil.printFromBuffer(
+		const stringsArray = stringsUtil.getArrFromBuffer(
 		    stringBuffer,
 		    { minChars: 10 }
 		);
@@ -39,7 +39,7 @@ describe('stringsUtil', function() {
 	describe('isPrintableFn', function() {
 	    it('should print only a\'s', function() {
 		const stringBuffer = Buffer.from('laaaaaaame', 'ascii');
-		const stringsArray = stringsUtil.printFromBuffer(
+		const stringsArray = stringsUtil.getArrFromBuffer(
 		    stringBuffer,
 		    {
 			minChars: 4,
@@ -55,7 +55,7 @@ describe('stringsUtil', function() {
 	
     });
     
-    describe('.printFromFile', function() {
+    describe('.loadFromFile', function() {
 	
 	const binaryFilePath = filesPath + 'helloWorld';
 
@@ -63,7 +63,7 @@ describe('stringsUtil', function() {
 	    it('should print all strings in a file', function() {
 		const getTextFileContents = fs.readFileAsync(filesPath + 'defaultOutput.txt', 'ascii');
 		
-		const getDefaultStrings = stringsUtil.printFromFile(binaryFilePath).then(arrToString);
+		const getDefaultStrings = stringsUtil.loadFromFile(binaryFilePath).then(arrToString);
 		
 		return Promise.all([getTextFileContents, getDefaultStrings]).then(
 		    function([fileText, stringsFromFile]) {
@@ -77,7 +77,7 @@ describe('stringsUtil', function() {
 	    it('should print strings > 10 chars', function() {
 		const getTextFileContents = fs.readFileAsync(filesPath + 'tenChars.txt', 'ascii');
 		
-		const getTenCharStrings = stringsUtil.printFromFile(binaryFilePath, { minChars: 10 }).then(arrToString);
+		const getTenCharStrings = stringsUtil.loadFromFile(binaryFilePath, { minChars: 10 }).then(arrToString);
 		
 		return Promise.all([getTextFileContents, getTenCharStrings]).then(
 		    function([fileText, stringsFromFile]) {
@@ -89,7 +89,7 @@ describe('stringsUtil', function() {
 
     });
 
-    describe('.printFromUrl', function() {
+    describe('.loadFromUrl', function() {
 	it('should print all strings from a URL', function() {
 	    // Downloading the zip may take some time,
 	    // so we'll allow up to 30s before we fail the test
@@ -104,7 +104,7 @@ describe('stringsUtil', function() {
 
 	    const getTextFileContents = fs.readFileAsync(filesPath + 'zipOutput.txt', 'ascii');
 
-	    const getStringsFromUrl = stringsUtil.printFromUrl(zipUrl).then(arrToString);
+	    const getStringsFromUrl = stringsUtil.loadFromUrl(zipUrl).then(arrToString);
 	    return Promise.all([getTextFileContents, getStringsFromUrl]).then(
 		function([fileText, stringsFromUrl]) {
 		    assert.equal(fileText, stringsFromUrl);
