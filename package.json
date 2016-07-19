@@ -4,7 +4,8 @@
   "description": "Prints the strings of printable characters in a file (just like the GNU Binutils tool)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha",
+    "build": "wt-bundle --output build/webtask.js webtask.js"
   },
   "repository": {
     "type": "git",
