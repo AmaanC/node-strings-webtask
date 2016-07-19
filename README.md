@@ -7,6 +7,7 @@ After cloning (`git clone`) and installing dependencies (`npm install`), it can 
 
       const stringsUtil = require('./pathToLib/app.js');
       const zipUrl = 'http://raw.githubusercontent.com/AmaanC/node-strings-webtask/master/test/example-files/test.zip';
+      
       stringsUtil.loadFromUrl(zipUrl).then(function(arr) {
             console.log(arr.join('\n'));
       });
