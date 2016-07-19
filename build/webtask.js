@@ -52,8 +52,7 @@ module.exports =
 
 	module.exports = function (ctx, done) {
 				var ctxOpts = {
-							minChars: ctx.data.minChars,
-							isPrintableFn: ctx.data.isPrintableFn
+							minChars: ctx.data.minChars
 				};
 				if (!ctx.data.url) {
 							done('A URL is required!');
@@ -83,7 +82,9 @@ module.exports =
 
 	var Promise = __webpack_require__(59);
 	var fs = Promise.promisifyAll(__webpack_require__(60));
-	var http = __webpack_require__(61).http;
+	var url = __webpack_require__(61);
+	var http = __webpack_require__(62).http;
+	var https = __webpack_require__(62).https;
 	var stringsUtil = {};
 
 	/*
@@ -92,8 +93,8 @@ module.exports =
 	 */
 	var isPrintableCharCode = function isPrintableCharCode(charCode) {
 	  var asciiChar = String.fromCharCode(charCode);
-	  // We accept all alphanumeric characters + space + newline + tab
-	  return asciiChar === '\n' || asciiChar === '\t' || charCode > 31 && charCode < 127;
+	  // We accept all alphanumeric characters + space + tab
+	  return asciiChar === '\t' || charCode > 31 && charCode < 127;
 	};
 
 	/* Declaring some defaults options for all utility functions to use
@@ -108,7 +109,7 @@ module.exports =
 	 * than minChars.
 	 * A custom isPrintableFn can be passed too to change the testing mechanism
 	 */
-	stringsUtil.printFromBuffer = function (fileBuffer) {
+	stringsUtil.getArrFromBuffer = function (fileBuffer) {
 	  var _ref = arguments.length <= 1 || arguments[1] === undefined ? stringsUtil.DEFAULT_OPTS : arguments[1];
 
 	  var _ref$minChars = _ref.minChars;
@@ -119,6 +120,10 @@ module.exports =
 	  var curStreak = 0;
 	  var stringList = [];
 	  var startPos = 0;
+
+	  if (minChars < 0) {
+	    throw new Error('minChars must be >= 0');
+	  }
 
 	  var _iteratorNormalCompletion = true;
 	  var _didIteratorError = false;
@@ -169,15 +174,15 @@ module.exports =
 	 * Loads a local file as a stream and analyzes the buffer
 	 * for a minimum number of printable characters.
 	 *
-	 * Returns an array of printable strings longer than minChars
+	 * Returns a promise which will contain an array of strings
 	 */
-	stringsUtil.printFromFile = function (filePath) {
+	stringsUtil.loadFromFile = function (filePath) {
 	  var opts = arguments.length <= 1 || arguments[1] === undefined ? stringsUtil.DEFAULT_OPTS : arguments[1];
 
 	  return Promise.try(function () {
 	    return fs.readFileAsync(filePath);
 	  }).then(function (fileBuffer) {
-	    return stringsUtil.printFromBuffer(fileBuffer, opts);
+	    return stringsUtil.getArrFromBuffer(fileBuffer, opts);
 	  });
 	};
 
@@ -185,13 +190,29 @@ module.exports =
 	 * Returns a Promise which will return an array of all printable
 	 * in the file loaded from the URL
 	 */
-	stringsUtil.printFromUrl = function (url) {
+	stringsUtil.loadFromUrl = function (inputUrl) {
 	  var opts = arguments.length <= 1 || arguments[1] === undefined ? stringsUtil.DEFAULT_OPTS : arguments[1];
 
 	  var bufferChunks = [];
+	  var client = void 0;
 	  return new Promise(function (resolve, reject) {
-	    http.get(url, function (res) {
+	    var protocol = url.parse(inputUrl).protocol;
+	    if (protocol === 'http:') {
+	      client = http;
+	    } else if (protocol === 'https:') {
+	      client = https;
+	    } else {
+	      throw new Error('URL needs a protocol (like "http:")');
+	    }
+
+	    client.get(inputUrl, function (res) {
 	      res.on('data', function (chunk) {
+	        // We're saving all chunks ass they come in so we can
+	        // analyze the buffer at the end for strings.
+	        // To save on memory, we could analyze chunks as they come
+	        // in and discard all the non-printable bytes.
+
+	        // I've chosen not to do that, but it may be worth considering.
 	        bufferChunks.push(chunk);
 	      });
 	      res.on('end', function () {
@@ -200,7 +221,7 @@ module.exports =
 	      });
 	    }).on('error', reject);
 	  }).then(function (urlBuffer) {
-	    return stringsUtil.printFromBuffer(urlBuffer, opts);
+	    return stringsUtil.getArrFromBuffer(urlBuffer, opts);
 	  });
 	};
 
@@ -1147,20 +1168,26 @@ module.exports =
 
 /***/ },
 /* 61 */
+/***/ function(module, exports) {
+
+	module.exports = require("url");
+
+/***/ },
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(62)({
+	module.exports = __webpack_require__(63)({
 		http: __webpack_require__(67),
 		https: __webpack_require__(68)
 	});
 
 
 /***/ },
-/* 62 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var url = __webpack_require__(63);
+	var url = __webpack_require__(61);
 	var assert = __webpack_require__(64);
 	var debug = __webpack_require__(65)('follow-redirects');
 	var consume = __webpack_require__(66);
@@ -1325,12 +1352,6 @@ module.exports =
 		}
 	}
 
-
-/***/ },
-/* 63 */
-/***/ function(module, exports) {
-
-	module.exports = require("url");
 
 /***/ },
 /* 64 */
