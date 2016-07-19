@@ -4,7 +4,8 @@ const fs = Promise.promisifyAll(require('fs'));
 const stringsUtil = require('../');
 
 // A helper that converts our arrays into strings of the format
-// that strings outputs
+// that the `strings` tool outputs
+
 // The output file ends with a newline, whereas
 // our arr.join'd string won't.
 // Apart from that, they should be identical
@@ -93,7 +94,7 @@ describe('stringsUtil', function() {
 	    // Downloading the zip may take some time,
 	    // so we'll allow up to 30s before we fail the test
 
-	    // NOTE: This may fail sometimes because Github is rate-limiting
+	    // NOTE: This may fail sometimes because Github is rate-limiting us
 	    // Trying again in a few seconds usually works.
 	    this.timeout(30000);
 	    
@@ -106,7 +107,6 @@ describe('stringsUtil', function() {
 	    const getStringsFromUrl = stringsUtil.printFromUrl(zipUrl).then(arrToString);
 	    return Promise.all([getTextFileContents, getStringsFromUrl]).then(
 		function([fileText, stringsFromUrl]) {
-		    // console.log(stringsFromUrl);
 		    assert.equal(fileText, stringsFromUrl);
 		}
 	    );
