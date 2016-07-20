@@ -1,7 +1,7 @@
 # node-strings-webtask
 A recreation of GNU Binutils' [`strings`](https://en.wikipedia.org/wiki/Strings_(Unix)) in a Node.js WebTask.
 It's mostly a project I worked on for fun, but it _could_ have potential use in something like an online
-online binary analysis toolkit.
+binary analysis toolkit.
 
 # Usage
 
