@@ -11,7 +11,7 @@ const stringsUtil = require('../');
 // Apart from that, they should be identical
 const arrToString = (stringsArray) =>
 	  (stringsArray.join('\n') + '\n');
-const filesPath = './test/example-files/';
+const filesPath = './test/fixtures/';
 
 describe('stringsUtil', function() {
     describe('.getArrFromBuffer', function() {
