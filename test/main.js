@@ -100,7 +100,7 @@ describe('stringsUtil', function() {
 	    
 	    // We're printing all the strings in a zip file, which is
 	    // actually very interesting to see after compression!
-	    const zipUrl = 'http://raw.githubusercontent.com/AmaanC/node-strings-webtask/master/test/example-files/test.zip';
+	    const zipUrl = 'http://raw.githubusercontent.com/AmaanC/node-strings-webtask/master/test/fixtures/test.zip';
 
 	    const getTextFileContents = fs.readFileAsync(filesPath + 'zipOutput.txt', 'ascii');
 
